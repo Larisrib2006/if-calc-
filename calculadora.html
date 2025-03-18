@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e2d0d0;
+            padding: 20px;
+        }
+        .container {
+            background: rgb(122, 184, 120);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            display: inline-block;
+        }
+        input {
+            margin: 5px;
+            padding: 8px;
+            width: 50px;
+            text-align: center;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background: #28a745;
+            color: rgb(61, 255, 13);
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #8fbb98;
+        }
+        #resultado, #necessario {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Notas</h1>
+        
+        <label>É uma disciplina anual ou semestral?</label><br>
+        <select id="tipoDisciplina" onchange="calcularNecessario()">
+            <option value="anual">Anual</option>
+            <option value="semestral">Semestral</option>
+        </select>
+
+        <div id="inputsNotas">
+            <h3>Insira suas notas:</h3>
+            <label>Bimestre 1:</label>
+            <input type="number" id="nota1" min="0" max="100" placeholder="0 a 100" oninput="calcularNecessario()"><br>
+
+            <label>Bimestre 2:</label>
+            <input type="number" id="nota2" min="0" max="100" placeholder="0 a 100" oninput="calcularNecessario()"><br>
+
+            <label>Bimestre 3:</label>
+            <input type="number" id="nota3" min="0" max="100" placeholder="0 a 100" oninput="calcularNecessario()"><br>
+
+            <label>Bimestre 4:</label>
+            <input type="number" id="nota4" min="0" max="100" placeholder="0 a 100" oninput="calcularNecessario()"><br>
+        </div>
+
+        <button onclick="calcularMedia()">Calcular Média</button>
+
+        <p id="resultado"></p>
+        <p id="necessario"></p>
+    </div>
+
+    <script>
+        function calcularNecessario() {
+            let tipoDisciplina = document.getElementById("tipoDisciplina").value;
+            let nota1 = parseFloat(document.getElementById("nota1").value) || 0;
+            let nota2 = parseFloat(document.getElementById("nota2").value) || 0;
+            let nota3 = parseFloat(document.getElementById("nota3").value) || 0;
+            let nota4 = parseFloat(document.getElementById("nota4").value) || 0;
+
+            let pesos = tipoDisciplina === "anual" ? [2, 2, 3, 3] : [2, 3];
+            let totalPesos = pesos.reduce((a, b) => a + b, 0);
+            let notas = tipoDisciplina === "anual" ? [nota1, nota2, nota3, nota4] : [nota1, nota2];
+
+            let somaPesada = 0;
+            let pesoUsado = 0;
+            let faltamNotas = [];
+
+            for (let i = 0; i < notas.length; i++) {
+                if (notas[i] > 0) {
+                    somaPesada += notas[i] * pesos[i];
+                    pesoUsado += pesos[i];
+                } else {
+                    faltamNotas.push(i);
+                }
+            }
+
+            let necessarioTexto = "";
+
+            if (faltamNotas.length > 0) {
+                let pesoRestante = totalPesos - pesoUsado;
+                let pontosNecessarios = (60 * totalPesos) - somaPesada;
+
+                if (pontosNecessarios <= 0) {
+                    necessarioTexto = "✅ Você já atingiu a média necessária!";
+                } else {
+                    let mediaNecessaria = Math.round(pontosNecessarios / pesoRestante);
+                    necessarioTexto = `🟡 Você precisa de pelo menos **${mediaNecessaria}** nos próximos bimestres.`;
+                }
+            }
+
+            document.getElementById("necessario").innerHTML = necessarioTexto;
+        }
+
+        function calcularMedia() {
+            let tipoDisciplina = document.getElementById("tipoDisciplina").value;
+            
+            let nota1 = parseFloat(document.getElementById("nota1").value) || 0;
+            let nota2 = parseFloat(document.getElementById("nota2").value) || 0;
+            let nota3 = parseFloat(document.getElementById("nota3").value) || 0;
+            let nota4 = parseFloat(document.getElementById("nota4").value) || 0;
+
+            let media = 0;
+
+            if (tipoDisciplina === "anual") {
+                media = Math.round(((nota1 * 2) + (nota2 * 2) + (nota3 * 3) + (nota4 * 3)) / 10);
+            } else {
+                media = Math.round(((nota1 * 2) + (nota2 * 3)) / 5);
+            }
+
+            let resultado = `Sua média final é: ${media}`;
+
+            if (media >= 60) {
+                resultado += " 🎉 Você foi aprovado!";
+            } else {
+                let notaRecuperacao = Math.round(((60 * (tipoDisciplina === "anual" ? 10 : 5)) - 
+                                      ((nota1 * 2) + (nota2 * 2) + (nota3 * 3) + (nota4 * 3))) / 3);
+                resultado += ` ❌ Você precisa tirar pelo menos ${notaRecuperacao} na recuperação.`;
+            }
+
+            document.getElementById("resultado").innerText = resultado;
+        }
+    </script>
+</body>
+</html>
