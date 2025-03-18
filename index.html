@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IF Calc+</title>
+    <title>Caixinhas e Parágrafos</title>
+    <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-    <h1>IF Calc+</h1>
+    <h1>IF CALC+</h1>
+
+    <div class="container">
+        <div class="item">
+            <p class="texto">calcule suas notas!</p>
+            <button class="caixinha"  onclick="redirecionar(1)">Calculadora</button>
+        </div>
+
+        <div class="item">
+            <p class="texto">mange </p>
+            <button class="caixinha" onclick="redirecionar(2)">mange</button>
+        </div>
+
+        <div class="item">
+            <p class="texto">tire suas duvidas com a coordenação.</p>
+            <button class="caixinha"  onclick="redirecionar(3)">chat de duvidas</button>
+        </div>
+
+        <div class="item">
+            <p class="texto">Texto para Caixinha 4</p>
+            <button class="caixinha"  onclick="redirecionar(4)">++</button>
+        </div>
+    </div>
+    <script>
+    function redirecionar(numero) {
+        switch (numero) {
+            case 1:
+                window.location.href = "calculadora.html"; // Página da calculadora
+                break;
+            case 2:
+                window.location.href = "pagina2.html"; // Outra página
+                break;
+            case 3:
+                window.location.href = "pagina3.html"; // Outra página
+                break;
+            case 4:
+                window.location.href = "pagina4.html"; // Outra página
+                break;
+            default:
+                alert("Página não encontrada!");
+        }
+    }
+</script>
 </body>
 </html>
